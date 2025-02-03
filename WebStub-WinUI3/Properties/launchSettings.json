@@ -1,0 +1,10 @@
+{
+  "profiles": {
+    "WebStub-WinUI3 (Package)": {
+      "commandName": "MsixPackage"
+    },
+    "WebStub-WinUI3 (Unpackaged)": {
+      "commandName": "Project"
+    }
+  }
+}

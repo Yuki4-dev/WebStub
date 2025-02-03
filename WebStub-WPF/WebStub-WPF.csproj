@@ -1,0 +1,60 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net9.0-windows7.0</TargetFramework>
+    <RootNamespace>WebStub_WPF</RootNamespace>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <UseWPF>true</UseWPF>
+    <ApplicationIcon>webstub.ico</ApplicationIcon>
+    <PackageIcon>webstub.png</PackageIcon>
+    <SelfContained>true</SelfContained>
+    <PublishSingleFile>true</PublishSingleFile>
+    <LangVersion>preview</LangVersion>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Content Include="Assets\Html\index.html" />
+    <Content Include="Assets\Html\monaco-editor\min\vs\base\browser\ui\codicons\codicon\codicon.ttf" />
+    <Content Include="Assets\Html\monaco-editor\min\vs\base\worker\workerMain.js" />
+    <Content Include="Assets\Html\monaco-editor\min\vs\basic-languages\html\html.js" />
+    <Content Include="Assets\Html\monaco-editor\min\vs\basic-languages\javascript\javascript.js" />
+    <Content Include="Assets\Html\monaco-editor\min\vs\basic-languages\typescript\typescript.js" />
+    <Content Include="Assets\Html\monaco-editor\min\vs\editor\editor.main.css" />
+    <Content Include="Assets\Html\monaco-editor\min\vs\editor\editor.main.js" />
+    <Content Include="Assets\Html\monaco-editor\min\vs\language\css\cssMode.js" />
+    <Content Include="Assets\Html\monaco-editor\min\vs\language\css\cssWorker.js" />
+    <Content Include="Assets\Html\monaco-editor\min\vs\language\html\htmlMode.js" />
+    <Content Include="Assets\Html\monaco-editor\min\vs\language\html\htmlWorker.js" />
+    <Content Include="Assets\Html\monaco-editor\min\vs\language\json\jsonMode.js" />
+    <Content Include="Assets\Html\monaco-editor\min\vs\language\json\jsonWorker.js" />
+    <Content Include="Assets\Html\monaco-editor\min\vs\language\typescript\tsMode.js" />
+    <Content Include="Assets\Html\monaco-editor\min\vs\language\typescript\tsWorker.js" />
+    <Content Include="Assets\Html\monaco-editor\min\vs\loader.js" />
+    <Content Include="Assets\Html\monaco-editor\min\vs\nls.messages.de.js" />
+    <Content Include="Assets\Html\monaco-editor\min\vs\nls.messages.es.js" />
+    <Content Include="Assets\Html\monaco-editor\min\vs\nls.messages.fr.js" />
+    <Content Include="Assets\Html\monaco-editor\min\vs\nls.messages.it.js" />
+    <Content Include="Assets\Html\monaco-editor\min\vs\nls.messages.ja.js" />
+    <Content Include="Assets\Html\monaco-editor\min\vs\nls.messages.ko.js" />
+    <Content Include="Assets\Html\monaco-editor\min\vs\nls.messages.ru.js" />
+    <Content Include="Assets\Html\monaco-editor\min\vs\nls.messages.zh-cn.js" />
+    <Content Include="Assets\Html\monaco-editor\min\vs\nls.messages.zh-tw.js" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Web.WebView2" Version="1.0.2903.40" />
+    <PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.0" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="9.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\WebStub\WebStub.csproj" />
+  </ItemGroup>
+
+  <Target Name="PostBuild" AfterTargets="PostBuildEvent">
+    <Exec Command="xcopy &quot;$(ProjectDir)\Assets&quot; &quot;$(OutDir)\Assets&quot; /i /s /y" />
+  </Target>
+
+</Project>

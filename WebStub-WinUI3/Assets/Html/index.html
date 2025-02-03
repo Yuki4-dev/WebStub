@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta http-equiv="Content-Type" content="text/html;charset=utf-8">
+    <style>
+        html, body {
+            height: 100%;
+            margin: 0;
+            background: black;
+        }
+
+        ::-webkit-scrollbar {
+            display: none;
+        }
+
+        #container {
+            height: 100%;
+            width: 100%;
+        }
+    </style>
+</head>
+<body>
+    <div id="container"></div>
+    <script src="monaco-editor/min/vs/loader.js"></script>
+    <script>
+        let editor;
+        let model;
+        require.config({ paths: { 'vs': 'monaco-editor/min/vs' } });
+        require(['vs/editor/editor.main'], async function () {
+            editor = monaco.editor.create(document.getElementById('container'), {
+                theme: "vs-dark",
+                fontFamily: 'Cascadia Code',
+                language: 'javascript',
+            });
+            model = editor.getModel();
+            model.onDidChangeContent((event) => {
+                window.chrome.webview.postMessage(
+                    {
+                        messageType: "data",
+                        message: model.getValue()
+                    })
+            });
+            window.addEventListener("resize", () => {
+                editor.layout();
+            });
+            window.chrome.webview.addEventListener('message', (arg) => {
+                model.setValue(arg.data)
+            });
+
+            window.chrome.webview.postMessage({
+                messageType: "system",
+                message: "loaded"
+            })
+        });
+    </script>
+</body>
+</html>

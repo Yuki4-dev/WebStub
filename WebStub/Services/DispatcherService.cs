@@ -1,0 +1,23 @@
+﻿namespace WebStub.Services
+{
+    public class DispatcherService
+    {
+        private static IDispatcherWrapper? wrapper;
+
+        public static void Run(Action callback)
+        {
+            if (wrapper == null) throw new InvalidOperationException(nameof(wrapper) + "is null.");
+            wrapper.Run(callback);
+        }
+
+        public static void SetDispatcher(IDispatcherWrapper dispatcher)
+        {
+            wrapper = dispatcher ?? throw new ArgumentNullException(nameof(dispatcher));
+        }
+    }
+
+    public interface IDispatcherWrapper
+    {
+        public void Run(Action callback);
+    }
+}
