@@ -4,24 +4,29 @@ namespace WebStub.Services
 {
     public class LocalApplicationDataService : ILocalApplicationDataService
     {
-        private const string local_application_folder_name = "WebStub";
-        private const string local_application_file_name = "web-stub-local-data.json";
+        private readonly string _folderPath;
+        private readonly string _filePath;
 
-        private string? _filePath;
+        public LocalApplicationDataService()
+        {
+            _folderPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "WebStub");
+            _filePath = Path.Combine(_folderPath, "web-stub-local-data.json");
+        }
 
         public async Task<string> GetLocalDataAsync(string key)
         {
-            string localFilePath = GetOrCreateFilePath();
-            string valueJson = await File.ReadAllTextAsync(localFilePath);
+            if (!File.Exists(_filePath))
+            {
+                return "";
+            }
+
+            var valueJson = await LoadTextAsync();
             if (!string.IsNullOrEmpty(valueJson))
             {
-                Dictionary<string, string>? valueMap = Json.FromJson<Dictionary<string, string>>(valueJson);
-                if (valueMap != null)
+                var valueMap = Json.FromJson<Dictionary<string, string>>(valueJson);
+                if (valueMap != null && valueMap.TryGetValue(key, out string? value))
                 {
-                    if (valueMap.ContainsKey(key))
-                    {
-                        return valueMap[key];
-                    }
+                    return value;
                 }
             }
 
@@ -30,53 +35,76 @@ namespace WebStub.Services
 
         public async Task SetLocalDataAsync(string key, string value)
         {
-            string localFilePath = GetOrCreateFilePath();
+            CreateFile();
 
-            Dictionary<string, string>? valueMap;
-            string valueJson = await File.ReadAllTextAsync(localFilePath);
-            if (string.IsNullOrEmpty(valueJson))
-            {
-                valueMap = new Dictionary<string, string>();
-                valueMap.Add(key, valueJson);
-            }
-            else
+            var valueJson = await LoadTextAsync();
+
+            Dictionary<string, string>? valueMap = null;
+            if (!string.IsNullOrEmpty(valueJson))
             {
                 valueMap = Json.FromJson<Dictionary<string, string>>(valueJson);
-                if (valueMap != null)
-                {
-                    valueMap[key] = value;
-                }
-                else
-                {
-                    valueMap = new Dictionary<string, string>();
-                    valueMap.Add(key, valueJson);
-                }
             }
 
-            await File.WriteAllTextAsync(localFilePath, Json.ToJson(valueMap));
+            if (valueMap == null)
+            {
+                valueMap = [];
+            }
+
+            valueMap[key] = value;
+            await SaveTextAsync(Json.ToJson(valueMap));
         }
 
-        private string GetOrCreateFilePath()
+        public Task DeleteLocalDataAsync()
         {
-            if (_filePath == null)
+            if (!File.Exists(_filePath))
             {
-                string path = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
-                path = Path.Combine(path, local_application_folder_name);
-                if (!Directory.Exists(path))
-                {
-                    _ = Directory.CreateDirectory(path);
-                }
-
-                path = Path.Combine(path, local_application_file_name);
-                if (!File.Exists(path))
-                {
-                    _ = File.Create(path);
-                }
-
-                _filePath = path;
+                return Task.CompletedTask;
             }
 
-            return _filePath;
+            File.Delete(_filePath);
+            Directory.Delete(_folderPath);
+            return Task.CompletedTask;
+        }
+
+
+        private async Task SaveTextAsync(string text)
+        {
+            try
+            {
+                await File.WriteAllTextAsync(_filePath, text);
+            }
+            catch (Exception e)
+            {
+                Logger.Error(e.Message);
+            }
+        }
+
+        private async Task<string?> LoadTextAsync()
+        {
+            try
+            {
+                return await File.ReadAllTextAsync(_filePath);
+            }
+            catch (Exception e)
+            {
+                Logger.Error(e.Message);
+                return null;
+            }
+        }
+
+        private void CreateFile()
+        {
+            if (File.Exists(_filePath))
+            {
+                return;
+            }
+
+            if (!Directory.Exists(_folderPath))
+            {
+                _ = Directory.CreateDirectory(_folderPath);
+            }
+
+            File.Create(_filePath).Close();
         }
     }
 }

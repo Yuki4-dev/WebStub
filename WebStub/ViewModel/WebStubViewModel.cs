@@ -52,7 +52,10 @@ namespace WebStub.ViewModel
 
         public void Receive(CloseApplicationMessage message)
         {
-            _ = localApplicationDataService.SetLocalDataAsync("javascript", JavaScript);
+            if (JavaScript != initilyze_javascript)
+            {
+                _ = localApplicationDataService.SetLocalDataAsync("javascript", JavaScript);
+            }
         }
 
         protected async Task OpenServerAsync(int port)
@@ -91,6 +94,7 @@ namespace WebStub.ViewModel
         protected void InitilyzeJavascript()
         {
             JavaScript = initilyze_javascript;
+            _ = localApplicationDataService.DeleteLocalDataAsync();
         }
 
         private async Task<HttpResponse> Server(HttpRequest request)

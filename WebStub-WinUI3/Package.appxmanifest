@@ -10,7 +10,7 @@
   <Identity
     Name="WebStub"
     Publisher="Yuki44"
-    Version="" />
+    Version="0.0.1.0" />
 
   <mp:PhoneIdentity PhoneProductId="849e71fa-f559-484e-acb1-b5fb9c9161c4" PhonePublisherId="00000000-0000-0000-0000-000000000000"/>
 

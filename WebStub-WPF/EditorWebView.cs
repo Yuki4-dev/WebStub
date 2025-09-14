@@ -37,7 +37,7 @@ namespace WebStub
             {
                 if (!webView.useEditorTextChanged)
                 {
-                    webView.InitilyzeText((string)e.NewValue);
+                    webView.SetEditorText((string)e.NewValue);
                 }
             }
         }
@@ -63,7 +63,7 @@ namespace WebStub
                 {
                     if (json.message == "loaded")
                     {
-                        InitilyzeText(Text);
+                        SetEditorText(Text);
                     }
                 }
                 else if (json.messageType == "data")
@@ -80,9 +80,14 @@ namespace WebStub
 
         }
 
-        private void InitilyzeText(string text)
+        private void SetEditorText(string text)
         {
-            CoreWebView2?.PostWebMessageAsString(text);
+            var message = new MessageJson
+            {
+                messageType = "data",
+                message = text
+            };
+            CoreWebView2?.PostWebMessageAsJson(Json.ToJson(message));
         }
 
         private class MessageJson

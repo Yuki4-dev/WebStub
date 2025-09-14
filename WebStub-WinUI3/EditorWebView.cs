@@ -32,6 +32,10 @@ namespace WebStub
             Source = url;
             NavigationStarting += EditorWebView_NavigationStarting;
             CoreWebView2Initialized += EditorWebView_CoreWebView2Initialized;
+            ActualThemeChanged += (s, e) =>
+            {
+                SetTheme();
+            };
         }
 
         private static void OnTextPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
@@ -40,7 +44,7 @@ namespace WebStub
             {
                 if (!webView.useEditorTextChanged)
                 {
-                    webView.InitilyzeText((string)e.NewValue);
+                    webView.SetEditorText((string)e.NewValue);
                 }
             }
         }
@@ -70,7 +74,8 @@ namespace WebStub
                 {
                     if (json.message == "loaded")
                     {
-                        InitilyzeText(Text);
+                        SetTheme();
+                        SetEditorText(Text);
                     }
                 }
                 else if (json.messageType == "data")
@@ -87,9 +92,24 @@ namespace WebStub
 
         }
 
-        private void InitilyzeText(string text)
+        private void SetTheme()
         {
-            CoreWebView2?.PostWebMessageAsString(text);
+            var message = new MessageJson
+            {
+                messageType = "theme",
+                message = ActualTheme == ElementTheme.Dark ? "dark" : "light"
+            };
+            CoreWebView2?.PostWebMessageAsJson(Json.ToJson(message));
+        }
+
+        private void SetEditorText(string text)
+        {
+            var message = new MessageJson
+            {
+                messageType = "data",
+                message = text
+            };
+            CoreWebView2?.PostWebMessageAsJson(Json.ToJson(message));
         }
 
         private class MessageJson

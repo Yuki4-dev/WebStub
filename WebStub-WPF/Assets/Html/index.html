@@ -29,7 +29,7 @@
         require.config({ paths: { 'vs': 'monaco-editor/min/vs' } });
         require(['vs/editor/editor.main'], async function () {
             editor = monaco.editor.create(document.getElementById('container'), {
-                theme: "vs-dark",
+                theme: 'vs-dark',
                 fontFamily: 'Cascadia Code',
                 language: 'javascript',
             });
@@ -37,20 +37,25 @@
             model.onDidChangeContent((event) => {
                 window.chrome.webview.postMessage(
                     {
-                        messageType: "data",
+                        messageType: 'data',
                         message: model.getValue()
                     })
             });
-            window.addEventListener("resize", () => {
+            window.addEventListener('resize', () => {
                 editor.layout();
             });
             window.chrome.webview.addEventListener('message', (arg) => {
-                model.setValue(arg.data)
+                const data = arg.data;
+                if (data.messageType === 'data') {
+                    model.setValue(data.message);
+                } else if (data.messageType === 'theme') {
+                    monaco.editor.setTheme(data.message === 'dark' ? 'vs-dark' : 'vs');
+                }
             });
 
             window.chrome.webview.postMessage({
-                messageType: "system",
-                message: "loaded"
+                messageType: 'system',
+                message: 'loaded'
             })
         });
     </script>
