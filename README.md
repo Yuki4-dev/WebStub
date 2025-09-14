@@ -4,10 +4,10 @@ Web開発者向けのWindowsデスクトップアプリです。指定ポート�
 ## WinUI3
 
 #### Dark
-![image](https://github.com/user-attachments/assets/3dc26114-ada7-4ab3-bc6c-cc275d259dce)
+<img width="1611" height="909" alt="DARK" src="https://github.com/user-attachments/assets/2a669a71-0c8e-4396-acf6-1cc7554b4701" />
 
 #### Light
-![image](https://github.com/user-attachments/assets/65493b22-0c90-4312-9b60-7517917e5801)
+<img width="1630" height="893" alt="LIGHT" src="https://github.com/user-attachments/assets/bb0578df-44ed-4580-b1a7-3949bb390fb2" />
 
 ## WPF
 ![image](https://github.com/user-attachments/assets/aa98ef73-fabd-4581-8a31-e2a3731a0bc1)
