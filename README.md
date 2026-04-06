@@ -2,6 +2,10 @@
 Web開発者向けのWindowsデスクトップアプリです。指定ポートでローカルサーバを立ち上げ、リクエストが来た際にエディター内のJavaScriptを実行してレスポンスを返します。Web開発のローカルサーバスタブとして活用できます。
 https://apps.microsoft.com/detail/9n8ghkvmhg5c?hl=ja-JP&gl=JP
 
+<a href="https://get.microsoft.com/installer/download/9n8ghkvmhg5c?referrer=appbadge" target="_self" >
+	<img src="https://get.microsoft.com/images/en-us%20dark.svg" width="200"/>
+</a>
+
 ## WinUI3
 
 #### Dark
